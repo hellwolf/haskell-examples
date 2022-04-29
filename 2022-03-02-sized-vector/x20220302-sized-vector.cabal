@@ -30,7 +30,7 @@ executable x20220302-sized-vector
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
     build-depends:
-        base ^>=4.16.1.0,
-        sized
-    hs-source-dirs:   .
+              base ^>=4.14.0.0,
+              sized
+    hs-source-dirs:   examples
     default-language: GHC2021
