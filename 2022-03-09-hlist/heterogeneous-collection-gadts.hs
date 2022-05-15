@@ -66,4 +66,3 @@ main = do
   putStrLn ""
   putStrLn "Searching Int..."
   putStrLn $ show $ findShowable coll (Proxy @Int)
-

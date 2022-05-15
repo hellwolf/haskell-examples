@@ -29,4 +29,3 @@ main = do
   putStrLn $ show $ isInsolvent $ totalLiquidity a
   let b = [5.2::Double, 2.2::Double, -4.4::Double]
   putStrLn $ show $ isInsolvent $ totalLiquidity b
-

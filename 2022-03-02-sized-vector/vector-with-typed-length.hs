@@ -3,6 +3,8 @@
 {-# LANGUAGE PatternSynonyms     #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 
+module Main where
+
 import           Data.Sized
     ( Sized (..)
     , empty
@@ -48,4 +50,4 @@ main = do
   -- how to break it down??
   let (Nil :> (_ :: Int) :> (_ :: Int) :> (_ :: Int)) = getAddressLengths $ s2
   -- putStrLn . show $ a
-  print "END"
+  print "END."
