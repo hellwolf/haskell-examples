@@ -19,7 +19,7 @@ class (Show a, Typeable a) => Showable a where
     ) alist
 
 data AnyShowable where
-   MkShowable :: (Showable a) => a -> AnyShowable
+  MkShowable :: (Showable a) => a -> AnyShowable
 -- Alternative Syntax:
 -- data AnyShowable = forall a . Showable a => MkShowable a
 
