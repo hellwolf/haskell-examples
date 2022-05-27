@@ -22,7 +22,7 @@ template <typename T, typename C> class Num {
     typedef Num<T, C> ThisNum;
 
 protected:
-    int _val;
+    T _val;
 
 public:
     Num(int val) { _val = val; }
@@ -71,16 +71,19 @@ int main() {
     AnyNum<int> a(1);
     AnyNum<double> b(2);
     AnyNum<int> c(3);
+    AnyNum<double> d(4.2);
 
     std::cout << "a = " << a.show() << std::endl;
     std::cout << "b = " << b.show() << std::endl;
     std::cout << "c = " << c.show() << std::endl;
+    std::cout << "d = " << d.show() << std::endl;
 
     // using generics and compile-time polymorphism
     std::cout << "a + c = " << (a + c).show() << std::endl;
+    std::cout << "b + d = " << (b + d).show() << std::endl;
     std::cout << "a * c = " << (a * c).show() << std::endl;
     // but this won't compile:
-    // std::cout << a + b << std::endl;
+    //std::cout << a + b << std::endl;
 
     // run-time polymorphism
     //   failure with RTTI-check
@@ -89,11 +92,11 @@ int main() {
     } catch(std::exception& e) {
         std::cout << "a + b = error: " << e.what() << std::endl;
     }
-    //   successful with RTT-check
+    //   successful with RTTI-check
     static_cast<INum&>(a) += static_cast<const INum&>(c);
     std::cout << "a += c; a = " << a.show() << std::endl;
     //   IAnyNum interface
-    std::vector<const IAnyNum*> nums{&a, &b, &c};
+    std::vector<const IAnyNum*> nums{&a, &b, &c, &d};
     for (auto i: nums) std::cout << i->show() << ", ";
     std::cout << std::endl;
 
@@ -104,11 +107,13 @@ int main() {
 Expected output:
 
 a = 1
-b = 2
+b = 2.000000
 c = 3
+d = 4.000000
 a + c = 4
+b + d = 6.000000
 a * c = 3
 a + b = error: std::bad_cast
 a += c; a = 4
-4, 2, 3,
+4, 2.000000, 3, 4.000000,
 */
