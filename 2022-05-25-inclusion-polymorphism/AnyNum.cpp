@@ -92,8 +92,8 @@ int main() {
     //   successful with RTT-check
     static_cast<INum&>(a) += static_cast<const INum&>(c);
     std::cout << "a += c; a = " << a.show() << std::endl;
-    //   Show interface
-    std::vector<const IShow*> nums{&a, &b, &c};
+    //   IAnyNum interface
+    std::vector<const IAnyNum*> nums{&a, &b, &c};
     for (auto i: nums) std::cout << i->show() << ", ";
     std::cout << std::endl;
 

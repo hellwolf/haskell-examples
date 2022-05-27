@@ -169,3 +169,101 @@ So my central questions for discussions are:
 
 Cheers,
 Miao
+
+----
+Reply-to: Aaron-v
+
+ > Hi Miao,
+ >
+ > interface Num {
+ >   Num (+)(Num a, Num b);
+ >   Num abs(Num a);
+ >   Num fromInteger(Integer);
+ >   ...
+ > }
+ >
+ > I'm trying to follow through this and I'm afraid I'm not seeing how your example OOP interface would work.
+ > What would the implementation of `AnyNum<Double>.abs` be?  It seems like it has no way of knowing whether the argument actually contains a Double or not?
+ >
+ > Wouldn't the `Num` interface instead need to be along the lines of the following?
+ >
+ > ```
+ > interface Num<T> {
+ >   T (+)(T a, T b);
+ >   T abs(T a);
+ >   T fromInteger(Integer);
+ > }
+ > ```
+ >
+ > or possibly
+ >
+ > ```
+ > interface Num<T> {
+ >   Num<T> (+)(Num<T> a, Num<T> b);
+ >   Num<T> abs(Num<T> a);
+ >   Num<T> fromInteger(Integer);
+ > }
+ > ```
+
+Hi Aaron,
+
+You are right, I was a bit rushing in the end, and I should write a proper example instead of pseudo code. Here is a
+rewrite in actual C++: https://github.com/hellwolf/haskell-examples/blob/master/2022-05-25-inclusion-polymorphism/AnyNum.cpp
+
+While re-writing, it's clear that you cannot fit Num class in OOP, in C++ it's rather using generics
+
+```c++
+// generics/compile-time ad-hoc "type classes"
+// T: type of the number
+// C: container of the number
+template <typename T, typename C> class Num {
+    typedef Num<T, C> ThisNum;
+
+protected:
+    int _val;
+
+public:
+    Num(int val) { _val = val; }
+
+    // default implementation should work for int/double/etc.
+public:
+    static C add(const ThisNum& a, const ThisNum& b) { return C(a._val + b._val); }
+    static C mul(const ThisNum& a, const ThisNum& b) { return C(a._val * b._val); }
+    static C abs(const ThisNum& a) { return C(std::abs(a._val)); }
+    static C negate(const ThisNum& a) { return C(std::negate(a._val)); }
+    static C signum(const ThisNum& a) { return C(T(std::signbit(a._val))); }
+    static C fromInteger(T x) { return C(x); }
+};
+```
+
+This looks very much similar to the Haskell `Num` type class.
+
+And the OOP-style stuff for Num and Show could rather be:
+
+```c++
+// run-time/inclusion polymorphism classes:
+class INum {
+public:
+    virtual void operator +=(const INum&) = 0;
+    virtual void operator *=(const INum&) = 0;
+};
+class IShow {
+public:
+    virtual std::string show() const = 0;
+};
+class IAnyNum: public INum, public IShow {};
+```
+
+So the question back to can we express the += and *= inclusion polymorphism for Haskell data types.
+
+It seems to me that sub-typing libraries Olaf suggested could be something to look into.
+
+ >
+ > I'm thinking that the OOP version for your original Num interface would have the same unsafe casting issues that your haskell translation has.
+ > Or could you add an example of how `AnyNum<Double>.abs` would be implemented in the OOP version?
+
+Yes, indeed, without using `Typeable`, there is unsafe casting issue. In the C++ version I fixed, it uses dynamic_cast,
+which is basically using RTTI (similar to Haskell Typeable) to throw a run-time error if mismatched.
+
+Also you were right, there is no sensible abs for the OOP version. The OOP Num should be "object-oriented" ones such as
+"+=", "*=", etc.
