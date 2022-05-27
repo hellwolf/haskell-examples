@@ -79,6 +79,8 @@ int main() {
     // using generics and compile-time polymorphism
     std::cout << "a + c = " << (a + c).show() << std::endl;
     std::cout << "a * c = " << (a * c).show() << std::endl;
+    // but this won't compile:
+    // std::cout << a + b << std::endl;
 
     // run-time polymorphism
     //   failure with RTTI-check
