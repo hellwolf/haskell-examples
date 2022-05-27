@@ -97,3 +97,16 @@ int main() {
 
     return 0;
 }
+
+/*
+Expected output:
+
+a = 1
+b = 2
+c = 3
+a + c = 4
+a * c = 3
+a + b = error: std::bad_cast
+a += c; a = 4
+4, 2, 3,
+*/
