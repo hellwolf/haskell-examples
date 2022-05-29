@@ -19,15 +19,18 @@ class Typeable' a => Typeable'' a where
   type T1 a :: Type
   type T2 a :: Type
 
+type A :: Type -> Type
 data A a = A
   { val1 :: T1 a
   , val2 :: T2 a
   }
 
 -- * Does not work in GHC2021, but Haskell2010
--- instance Typeable'' a => Typeable' (A a) where
+-- Update: https://discourse.haskell.org/t/how-can-i-refactor-this-simple-recursive-function/4570/12
+--         Adding kind signature to A solved the problem
+instance Typeable'' a => Typeable' (A a) where
 -- * Works in GHC2021
-instance (Typeable'' a, Typeable (A a)) => Typeable' (A a) where
+-- instance (Typeable'' a, Typeable (A a)) => Typeable' (A a) where
    tag _ = "A/" ++ tag (Proxy @a)
 
 data B
