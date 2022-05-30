@@ -14,6 +14,8 @@ import           Data.Typeable (Typeable)
 
 class Typeable a => Typeable' a where
   tag :: Proxy a -> String
+  tagFromValue :: a -> String
+  tagFromValue _ = tag (Proxy @a)
 
 class Typeable' a => Typeable'' a where
   type T1 a :: Type
@@ -43,4 +45,5 @@ instance Typeable'' B where
 main :: IO ()
 main = do
   let a = A "hello" 42 :: A B
+  putStrLn $ tagFromValue a
   putStrLn $ tag (Proxy @(A B)) ++ ": " ++ show(val1 a) ++ show(val2 a)
