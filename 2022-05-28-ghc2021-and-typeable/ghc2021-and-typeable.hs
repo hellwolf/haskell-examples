@@ -3,6 +3,7 @@
 {-# LANGUAGE FlexibleContexts    #-}
 {-# LANGUAGE GHC2021             #-}
 -- {-# LANGUAGE Haskell2010         #-}
+-- {-# LANGUAGE PolyKinds           #-}
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications    #-}
 {-# LANGUAGE TypeFamilies        #-}
@@ -12,16 +13,17 @@ import           Data.Proxy    (Proxy (..))
 import           Data.Typeable (Typeable)
 
 
-class Typeable a => Typeable' a where
+class (Typeable k, Typeable a) => Typeable' (a :: k) where
   tag :: Proxy a -> String
-  tagFromValue :: a -> String
-  tagFromValue _ = tag (Proxy @a)
+
+tagFromValue :: forall a. Typeable' a => a -> String
+tagFromValue _ = tag (Proxy @a)
 
 class Typeable' a => Typeable'' a where
   type T1 a :: Type
   type T2 a :: Type
 
-type A :: Type -> Type
+-- type A :: Type -> Type
 data A a = A
   { val1 :: T1 a
   , val2 :: T2 a
