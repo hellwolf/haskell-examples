@@ -62,7 +62,7 @@ main = do
                                    go (n+1) (spend triangle_tok triangle_money bank0)
                                             tok2 money2
 
-      (num_steps, ending_money) = withCents cents (go 1)
+  let (num_steps, ending_money) = withCents cents (go 1)
 
   putStrLn ("Number of steps needed: " ++ show num_steps)
   putStrLn ("Final amount of money:  " ++ show ending_money)
