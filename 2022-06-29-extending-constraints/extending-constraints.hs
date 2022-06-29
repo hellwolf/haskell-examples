@@ -57,6 +57,7 @@ main = do
 
 --
 -- References:
+--
 -- * Discussion of this code: https://discourse.haskell.org/t/provide-extra-constraints-in-later-integration-stage-of-the-development/4713
 --
 -- * "a well-known problem in Haskell: how to define a type class such that instances of the type class can define
@@ -67,5 +68,4 @@ main = do
 -- * Other related:
 --   * https://stackoverflow.com/questions/12397751/adding-class-constraints-to-typeclass-instance
 --   * https://stackoverflow.com/questions/9598637/howto-further-constrain-an-existing-type-class-in-haskell
--- https://stackoverflow.com/questions/12397751/adding-class-constraints-to-typeclass-instance/72798905#72798905
 
