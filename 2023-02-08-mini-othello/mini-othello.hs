@@ -5,9 +5,9 @@ y;t=l p;e=b!!t;f=v k((g w t b,w),c+1)(x+m,y+n)q;h|s==0=i(e==0)(f 1)k|s==1=i(r&&e
 ==o w)(f 2)k|s==2=i(not r||e==0)k(i(e==w)(a,c+1)(f 2))}in h;p a c=foldr(\d k->v
 k k c d 0)(a,0)[(i,j)|i<-r,j<-r];n 0="_";n 1="X";n 2="O";y([],_)_=pure();y(a,b)k
 =u(k!!0)(m n a)>>t b(drop 1 k);q a d=let((b,w),c)=p a d in i(c==0)a(g w(l d)b,o
-w);z h a@(b,w)=print(n w,m(`c`b)[0..2])>>u" "s>>t b s>>i(w==h)(getLine>>=z h.q a.
-read)(z h(e a));t=y.splitAt 8;e a=q a.snd.head.f((>0).snd.fst).m((,)=<<p a)$[(i,
-j)|i<-k,j<-k]};z 1(g 1 35.g 1 28.g 2 27.g 2 36$replicate 64 0,1)}
+w);z h a@(b,w)=print(n w,m(`c`b)[0..2])>>u" "s>>t b s>>i(w==h)(getLine>>=z h.q a
+.read)(z h(e a));t=y.splitAt 8;e a=q a.snd.head.f((>0).snd.fst).m((,)=<<p a)$[(i
+,j)|i<-k,j<-k]};z 1(g 1 35.g 1 28.g 2 27.g 2 36$replicate 64 0,1)}
 -- ^10 ------------------------------------------------------------------ 80> --
 {- gam-10-80-hs-prelude/mini-othello (hellwolf), ghc 9.4.2
 https://hackage.haskell.org/package/base/docs/Prelude.html
