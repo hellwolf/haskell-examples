@@ -3,11 +3,11 @@ o;(&)=map;r=[0..7];j x=x>=0&&x<=7;c=(length.).filter.(==);s=show&r;l(x,y)=8*y+x;
 (^)w i b=take i b++w:drop(i+1)b;u=(putStrLn.).f(++);y([],_)_=u" "s;y(a,b)k=u(k!!
 0)[(n!!)&a]>>t b(drop 1k);t=y.splitAt 8;n="_XO";a%c=f(\a d->v a a c d 0)(a,0)(k[
 -1..1]);v k(a@(b,w),c)p@(x,y)q@(m,n)s=let{r=j x&&j y;t=l p;e=b!!t;f=v k((w^t$b,w
-),c+1)(x+m,y+n)q;h|s==0=e==0?f 1$k|s==1=r&&e==o!!w?f 2$k|s==2=not r||e==0?k$e==w
-?(a,c+1)$f 2}in h;q a d|((b,w),c)<-a%d=(c==0?b$(w^l d$b),o!!w);z h a@(b,w)=print
-(n!!w,(`c`b)&[0..2])>>t b s>>(w/=h?z h(e a)$getLine>>=z h.q a.read);e a=q a.snd.
-f(\c@(w,_)e@(d,_)->d>w?e$c)(0,(0,0))$((,)=<<snd.(a%))&k r};z 1(1^35$1^28$2^27$2^
-36$replicate 64 0,1)}
+),c+1)(x+m,y+n)q}in s==0?(e==0?f 1$k)$s==1?(r&&e==o!!w?f 2$k)$not r||e==0?k$e==w
+?(a,c+1)$f 2;q a d|((b,w),c)<-a%d=(c==0?b$(w^l d$b),o!!w);z h a@(b,w)=print(n!!w
+,(`c`b)&[0..2])>>t b s>>(w/=h?z h(e a)$getLine>>=z h.q a.read);e a=q a.snd.f(\
+c@(w,_)e@(d,_)->d>w?e$c)(0,(0,0))$((,)=<<snd.(a%))&k r};z 1(1^35$1^28$2^27$2^36$
+replicate 64 0,1)}
 -- ^10 ------------------------------------------------------------------ 80> --
 {- gam-10-80-hs-prelude/mini-othello (hellwolf), ghc 9.4.2
 https://hackage.haskell.org/package/base/docs/Prelude.html
