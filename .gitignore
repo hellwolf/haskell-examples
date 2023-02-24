@@ -1,1 +1,4 @@
-\dist-newstyle
+build
+dist
+dist-*
+node_modules

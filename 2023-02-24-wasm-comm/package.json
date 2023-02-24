@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "build": "make build"
+    },
+    "dependencies": {
+        "@bjorn3/browser_wasi_shim": "^0.2.3"
+    },
+    "devDependencies": {
+        "esbuild": "^0.17.10"
+    }
+}
