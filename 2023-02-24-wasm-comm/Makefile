@@ -12,7 +12,7 @@ dist/WasmComm.wasm: WasmComm.hs dist build
 		-optl-Wl,--export=hs_init,--export=echo,--export=save,--export=load,--export=size
 
 dist/client.js: client.js dist
-	esbuild $< --bundle --sourcemap --outfile=$@ --format=esm
+	npx esbuild $< --bundle --sourcemap --outfile=$@ --format=esm
 
 dist/index.html: index.html dist
 	cp $< $@
