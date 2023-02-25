@@ -13,7 +13,7 @@ save k v = do
   save2 k' v'
 
 foreign export ccall load :: CString -> IO CString
-load k = peekCString k >>= load2 >>= newCString
+load k = peekCString k >>= load1 >>= newCString
 
 foreign export ccall size :: IO Int
 size = size2
