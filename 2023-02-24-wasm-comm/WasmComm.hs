@@ -1,7 +1,14 @@
 module WasmComm where
 
 import           Foreign.C.String
+import           Foreign.Marshal.Alloc
+import           Foreign.Ptr
 import           Store
+
+foreign export ccall callocBuffer :: Int -> IO (Ptr a)
+callocBuffer = callocBytes
+foreign export ccall freeBuffer :: Ptr a -> IO ()
+freeBuffer = free
 
 foreign export ccall echo :: CString -> IO CString
 echo a = peekCString a >>= newCString
@@ -13,7 +20,7 @@ save k v = do
   save2 k' v'
 
 foreign export ccall load :: CString -> IO CString
-load k = peekCString k >>= load1 >>= newCString
+load k = peekCString k >>= load2 >>= newCString
 
 foreign export ccall size :: IO Int
 size = size2
