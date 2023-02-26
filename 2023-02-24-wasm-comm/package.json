@@ -6,6 +6,7 @@
         "@bjorn3/browser_wasi_shim": "^0.2.3"
     },
     "devDependencies": {
-        "esbuild": "^0.17.10"
+        "esbuild": "^0.17.10",
+        "eslint": "^8.34.0"
     }
 }

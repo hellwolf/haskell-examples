@@ -1,4 +1,5 @@
-import { WASI, File, PreopenDirectory } from "@bjorn3/browser_wasi_shim";
+/* global wasm, wasi, inst */
+import { WASI } from "@bjorn3/browser_wasi_shim";
 
 ////////////////////////////////////////////////////////////////////////////////
 // Haskell Wasm Utilities
