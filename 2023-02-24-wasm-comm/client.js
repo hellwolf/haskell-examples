@@ -83,6 +83,7 @@ function test() {
     });
 
     // initialize Haskell Wasm Reactor Module
+    wasi.inst = inst;
     inst.exports._initialize();
     inst.exports.hs_init(0, 0);
 
