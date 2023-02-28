@@ -3,7 +3,7 @@
         "build": "make build"
     },
     "dependencies": {
-        "@bjorn3/browser_wasi_shim": "^0.2.3"
+        "@bjorn3/browser_wasi_shim": "^0.2.4"
     },
     "devDependencies": {
         "esbuild": "^0.17.10",
