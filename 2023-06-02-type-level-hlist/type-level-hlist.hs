@@ -85,7 +85,7 @@ deriving instance (Show a, Show b) => Show (a :> b)
 ----------------------------------------------------------------------------------------------------
 main :: IO ()
 main = do
-  -- Use sugarfree Syntax
+  -- Use "Sugarfree" HList Syntax
   print $ abiDecode @TNil ""
   print $ abiDecode @(IntVal :> ())
     "42"
@@ -95,9 +95,9 @@ main = do
     "42,(\"estonia\",14)"
   print $ abiDecode @(IntVal :> (StringVal :> IntVal :> ()) :> StringVal :> ())
     "42,(\"estonia\",14),\"finland\""
-  print $ abiDecode @(IntVal  :> (StringVal :> IntVal :> ()) :> (StringVal :> IntVal :> ()) :> ())
+  print $ abiDecode @(IntVal :> (StringVal :> IntVal :> ()) :> (StringVal :> IntVal :> ()) :> ())
     "42,(\"estonia\",14),(\"finland\",50)"
-  -- Tuple syntax
+  -- Use Tuple Syntax
   print $ abiDecode' (Proxy @(OneVal IntVal))
     "42"
   print $ abiDecode' (Proxy @(IntVal, (StringVal, IntVal)))
