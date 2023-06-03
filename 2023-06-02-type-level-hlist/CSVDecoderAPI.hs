@@ -3,19 +3,19 @@
 {-# LANGUAGE TypeFamilies        #-}
 
 ----------------------------------------------------------------------------------------------------
--- Syntactic Sugar for TSV Decoder Through Establishing Equivalence Between HList and Tuples
+-- CSV Decoder API Allowing Equivalence Between Type List and Type Tuples
 ----------------------------------------------------------------------------------------------------
 
-module TSVDecoderAPI
+module CSVDecoderAPI
   ( (:>)(..)
-  , module TSVDecoderTypes
-  , tsvDecode
+  , module CSVDecoderTypes
+  , csvDecode
   ) where
 
 import           Data.Kind       (Type)
 
-import           TSVDecoder
-import           TSVDecoderTypes
+import           CSVDecoderCore
+import           CSVDecoderTypes
 
 
 type family EQUIV_TO_TLIST a :: Type where
@@ -27,6 +27,6 @@ type family EQUIV_TO_TLIST a :: Type where
   EQUIV_TO_TLIST (a, b, c) = EQUIV_TO_TLIST a :> EQUIV_TO_TLIST b :> EQUIV_TO_TLIST c :> ()
 
 -- | Main API for the decoder through type variable ~t~ and its equivalent hlist form.
-tsvDecode :: forall t a as. (TList a as, EQUIV_TO_TLIST t ~ (a :> as))
+csvDecode :: forall t a as. (TList a as, EQUIV_TO_TLIST t ~ (a :> as))
            => String -> (String, Maybe (a :> as))
-tsvDecode = tsv_decode @a @as
+csvDecode = csv_decode @a @as

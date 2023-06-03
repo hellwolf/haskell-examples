@@ -1,0 +1,22 @@
+#+Title: A Simple CSV Decoder API Using Type List
+
+* What Is It
+- A ~csvDecoder~ function (the API) that can parse input string of comma separated values (CSV).
+- Integer values, string values and list of them are supported.
+- A schema for the input is required, and can be supplied through the type applications of the first type parameter to
+  the API.
+- The schema can be in two forms:
+  - Type list form:
+    #+begin_src haskell
+csvDecode @(IntVal :> (StringVal :> IntVal :> ()) :> (StringVal :> IntVal :> ()) :> ())
+  "42,(\"estonia\",14),(\"finland\",50)"
+    #+end_src
+  - Type tuple form:
+    #+begin_src haskell
+csvDecode @(StringVal, [(IntVal, IntVal)])
+  "\"germany\",[(1,3),(5,7),(11,13)]"
+    #+end_src
+* How Does It Work
+- ~TList~: a type class for constructing type list and their decoding function ~csv_decode~.
+- ~EQUIV_TO_TLIST~: a closed type family to map syntactic sugar form such as type tuples to type list form.
+- ~csvDecode~: the API that packages everything into one single function.
