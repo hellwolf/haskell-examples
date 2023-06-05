@@ -1,9 +1,16 @@
-#+Title: A Simple CSV Decoder API Using Type List
+#+Title: A Simple (Quasi) CSV Decoder API With Type List Schema
 
+* Motivation
+- To parse input that has lost its structural information, a schema should be provided to assist the parser to recover
+  the structure.
+- Type list can be a succinct and ergonomic way to provide such schema to the parser.
+- This example project provides an example of such syntax.
+- To simplify the example though, a form of input that looks like comma separated values is chosen; but its structural
+  information is still recoverable which should still allow schema-less parsing.
 * What Is It
-- A ~csvDecoder~ function (the API) that can parse input string of comma separated values (CSV).
-- Integer values, string values and list of them are supported.
-- A schema for the input is required, and can be supplied through the type applications of the first type parameter to
+- A ~csvDecoder~ function (the API) parsing input string that looks like comma separated values (CSV).
+- Integer values, string values and lists of them are supported.
+- The schema for the input is required, and can be supplied through the type applications of the first type parameter to
   the API.
 - The schema can be in two forms:
   - Type list form:
