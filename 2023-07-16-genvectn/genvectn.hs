@@ -119,5 +119,5 @@ main = do
   withSomeSNat n $ \case
     -- Note: you have to use @SNat@ pattern matching to bring @n@ to the scope, since only @natSing@ can give the
     --       evidence of @KnownNat n@.
-    (Just (SNat @n)) -> sample (vect_n_of (natSing @n) (arbitrary :: Gen Char))
+    (Just (SNat @n)) -> sample (arbitrary :: Gen (Vect n Char))
     _                -> putStrLn "Not all integers are born SNats"
