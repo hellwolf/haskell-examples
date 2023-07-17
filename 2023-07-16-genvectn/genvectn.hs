@@ -7,6 +7,8 @@ build-depends: base, constraints, QuickCheck
 {-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE ExplicitNamespaces #-}
 {-# LANGUAGE GADTs              #-}
+{-# LANGUAGE LambdaCase         #-}
+{-# LANGUAGE PatternSynonyms    #-}
 
 {-|
 
@@ -44,7 +46,19 @@ import           Data.Constraint     (Dict (Dict), (:-) (Sub), (\\))
 import           Data.Constraint.Nat (minusNat)
 import           Data.Kind           (Type)
 import           Data.Type.Ord       (Compare)
-import           GHC.TypeLits        (KnownNat, Nat, OrderingI (..), cmpNat, natSing, type (+), type (-), type (<=))
+import           GHC.TypeLits
+    ( KnownNat
+    , Nat
+    , OrderingI (..)
+    , SNat
+    , cmpNat
+    , natSing
+    , pattern SNat
+    , type (+)
+    , type (-)
+    , type (<=)
+    , withSomeSNat
+    )
 import           Test.QuickCheck     (Arbitrary (..), Gen, sample)
 import           Unsafe.Coerce       (unsafeCoerce)
 
@@ -69,15 +83,15 @@ nat_gt_is_flipsucclte :: forall proxy1 proxy2 (m :: Nat) (n :: Nat) . proxy1 m -
 nat_gt_is_flipsucclte _ _ = Sub axiom
 
 -- | Helper function to generate arbitrary values for a lenght-n vector.
-vect_n_of :: forall {a} (n :: Nat) . KnownNat n => Gen a -> Gen (Vect n a)
-vect_n_of g = case cmpNat (natSing @n) (natSing @0) of
+vect_n_of :: forall {a} (n :: Nat) . KnownNat n => SNat n -> Gen a -> Gen (Vect n a)
+vect_n_of _ g = case cmpNat (natSing @n) (natSing @0) of
     EQI -> pure VNil -- Note: with the cmpNat pattern matching, GHC has no trouble to infer @KnownNat 0@.
     GTI -> -- Note: in order to use recursively call @vect_n_f@, we must prove @KnownNat (n - 1)@.
       --   --       We can either use 'withDict', or its operator form '\\'. Note the order of '\\' when chaining evidences.
       --
       --   Alternatively:
       --  @withDict (nat_gt_is_flipsucclte @n @0) $ withDict (minusNat @n @1) $@
-      VCons <$> g <*> vect_n_of g
+      VCons <$> g <*> vect_n_of (natSing @(n - 1)) g
               -- Note: with the evidence 1<=n, we can prove n-1 is KnownNat too.
               \\ minusNat @n @1
               -- Note: now we have evidence that @(Compare n 0 ~ GT)@ (n>0), let's hand wave and prove 1<=n.
@@ -86,11 +100,24 @@ vect_n_of g = case cmpNat (natSing @n) (natSing @0) of
 
 instance (KnownNat n, Arbitrary a) => Arbitrary (Vect n a) where
     -- arbitrary :: Gen (Vect n a)
-    arbitrary = vect_n_of arbitrary
+    arbitrary = vect_n_of (natSing @n) arbitrary
 
 main :: IO ()
 main = do
-    sample (arbitrary :: Gen (Vect 0 ()))
-    sample (arbitrary :: Gen (Vect 1 Int))
-    sample (arbitrary :: Gen (Vect 2 Float))
-    sample (arbitrary :: Gen (Vect 4 String))
+  -- Trying some compile-time known nats...
+  putStrLn "> arbitrary :: Gen (Vect 0 ())"
+  sample (arbitrary :: Gen (Vect 0 ()))
+  putStrLn "> arbitrary :: Gen (Vect 1 Int)"
+  sample (arbitrary :: Gen (Vect 1 Int))
+  putStrLn "> arbitrary :: Gen (Vect 2 Float)"
+  sample (arbitrary :: Gen (Vect 2 Float))
+  putStrLn "> arbitrary :: Gen (Vect 1 String)"
+  sample (arbitrary :: Gen (Vect 4 String))
+  -- Now an user input nat...
+  putStrLn "> How many number of elements?"
+  n <- readLn :: IO Integer
+  withSomeSNat n $ \case
+    -- Note: you have to use @SNat@ pattern matching to bring @n@ to the scope, since only @natSing@ can give the
+    --       evidence of @KnownNat n@.
+    (Just (SNat @n)) -> sample (vect_n_of (natSing @n) (arbitrary :: Gen Char))
+    _                -> putStrLn "Not all integers are born SNats"
