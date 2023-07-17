@@ -114,7 +114,7 @@ main = do
   putStrLn "> arbitrary :: Gen (Vect 1 String)"
   sample (arbitrary :: Gen (Vect 4 String))
   -- Now an user input nat...
-  putStrLn "> How many number of elements?"
+  putStrLn "> How many elements do you want?"
   n <- readLn :: IO Integer
   withSomeSNat n $ \case
     -- Note: you have to use @SNat@ pattern matching to bring @n@ to the scope, since only @natSing@ can give the
