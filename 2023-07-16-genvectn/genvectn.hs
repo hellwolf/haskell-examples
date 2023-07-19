@@ -2,7 +2,7 @@
 {- cabal:
 default-language: GHC2021
 ghc-options: -Wall
-build-depends: base, constraints, QuickCheck
+build-depends: base >=4.18, constraints, QuickCheck
 -}
 {-# LANGUAGE DataKinds          #-}
 {-# LANGUAGE ExplicitNamespaces #-}
