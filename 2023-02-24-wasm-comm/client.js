@@ -25,7 +25,7 @@ function withCStrings(strs, op) {
         return p;
     });
     const r = op(cstrs);
-    strs.forEach(inst.exports.freeBuffer);
+    cstrs.forEach(inst.exports.freeBuffer);
     return r;
 }
 
@@ -35,7 +35,6 @@ function withCString(str, op) {
 
 function fromCString(cstr) {
     const s = new TextDecoder("utf8").decode(cstringBufferAt(cstr));
-    inst.exports.freeBuffer(cstr);
     return s;
 }
 
