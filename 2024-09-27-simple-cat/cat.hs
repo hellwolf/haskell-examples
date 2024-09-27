@@ -11,33 +11,33 @@ Synopsis: a simple "cat" program that supports both line-buffering and binary in
 import           Control.Monad         (unless)
 import           Foreign.Marshal.Alloc (allocaBytes)
 import           Foreign.Ptr           (Ptr)
-import           System.IO             (BufferMode (..), hGetBuf, hGetBuffering, hGetLine, hIsEOF, hPutBuf, hPutStrLn,
-                                        stdin, stdout)
+import           System.IO             (BufferMode (..), Handle, hGetBuf, hGetBuffering, hGetLine, hIsEOF, hPutBuf,
+                                        hPutStrLn, stdin, stdout)
 
 -- https://stackoverflow.com/questions/68639266/size-of-buffered-input-in-c
 -- By many accounts, it seems "gnu cat" uses 128 KB as buffer size
 cBUFFER_SIZE :: Int
 cBUFFER_SIZE = 128 * 1024
 
-line_buffering_cat :: IO ()
-line_buffering_cat = go where
+line_buffering_cat :: Handle -> Handle -> IO ()
+line_buffering_cat hIn hOut = go where
   go = do
-    isEOF <- hIsEOF stdin
-    unless isEOF $ hGetLine stdin >>= hPutStrLn stdout >> go
+    isEOF <- hIsEOF hIn
+    unless isEOF $ hGetLine hIn >>= hPutStrLn hOut >> go
 
-binary_cat :: Ptr a -> IO ()
-binary_cat ptr = go where
+binary_cat :: Handle -> Handle -> Ptr a -> IO ()
+binary_cat hIn hOut ptr = go where
   go = do
-    n <- hGetBuf stdin ptr cBUFFER_SIZE
-    unless (n == 0) $ hPutBuf stdout ptr n >> go
+    n <- hGetBuf hIn ptr cBUFFER_SIZE
+    unless (n == 0) $ hPutBuf hOut ptr n >> go
 
 main :: IO ()
 main = do
   hGetBuffering stdin >>= \case
     -- use text input out for line-buffering stdin
-    LineBuffering -> line_buffering_cat
+    LineBuffering -> line_buffering_cat stdin stdout
    -- use binary input output for non line-buffering stdin
-    _ -> allocaBytes cBUFFER_SIZE binary_cat
+    _ -> allocaBytes cBUFFER_SIZE (binary_cat stdin stdout)
 
 {-
 Local Variables:
