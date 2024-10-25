@@ -63,7 +63,7 @@ highest_chances redWins =
     sortBy (\(_, p1, _) (_, p2, _) -> compare p1 p2) $
     winning_combos redWins
 
-print_combo (v, p, ws) = putStrLn $ printf "%0.3f%% %d " p v ++ intercalate " " ws
+print_combo (v, p, ws) = putStrLn $ printf "%0.3f%% %d " (100 * p) v ++ intercalate " " ws
 
 total_chance redWins = go (fmap (flip_state (not redWins)) undecided_states) votes 1
   where
@@ -72,7 +72,7 @@ total_chance redWins = go (fmap (flip_state (not redWins)) undecided_states) vot
       + if v + v' < votes_to_win then go as (v + v') (p' * p) else p' * p
     go [] v p = if v >= votes_to_win then p else 0
 
-print_total_chance = putStrLn . printf "Total chance: %0.4f%%" . (* 100) .total_chance
+print_total_chance = putStrLn . printf "Total chance: %0.4f%%" . (* 100) . total_chance
 
 main = do
   let totalCombos = total_combos
