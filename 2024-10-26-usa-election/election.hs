@@ -34,14 +34,15 @@ votes_to_win = 270 :: Int
 -- - https://www.270towin.com/road-to-270-combinations/
 blue_votes = 226 :: Int
 red_votes  = 219 :: Int
-undecided_states =[ State "ga" 16 0.72
-                  , State "nc" 16 0.71
-                  , State "pa" 19 0.61
-                  , State "mi" 15 0.54
-                  , State "wi" 10 0.57
-                  , State "az" 11 0.72
-                  , State "nv"  6 0.66
-                  ]
+undecided_states =
+  [ State "nc" 16 0.71
+  , State "nv" 6 0.66
+  , State "az" 11 0.72
+  , State "pa" 19 0.61
+  , State "mi" 15 0.55
+  , State "wi" 10 0.58
+  , State "ga" 16 0.72
+  ]
 
 total_combos = let n = length undecided_states
                in foldr (\r t -> nCr n r + t) 0 [0 .. n]
