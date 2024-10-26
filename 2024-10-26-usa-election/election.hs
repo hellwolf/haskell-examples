@@ -65,7 +65,7 @@ winning_combos redWins =
       (zip [0 .. nstates] c)
 
 highest_chances redWins =
-    sortBy (\(_, p1, _) (_, p2, _) -> compare p1 p2) $
+    sortBy (\(_, p1, _) (_, p2, _) -> compare p2 p1) $
     winning_combos redWins
 
 print_combo (v, p, ws) = putStrLn $ printf "%0.3f%% %d " (100 * p) v ++ intercalate " " ws
