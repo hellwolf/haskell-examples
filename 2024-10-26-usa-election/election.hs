@@ -6,9 +6,10 @@ ghc-options: -Wall
 -}
 {-# OPTIONS_GHC -Wno-missing-signatures #-}
 
-import           Control.Monad (replicateM)
-import           Data.List     (intercalate, sortBy)
-import           Text.Printf   (printf)
+import           Control.Exception (assert)
+import           Control.Monad     (replicateM)
+import           Data.List         (intercalate, sortBy)
+import           Text.Printf       (printf)
 
 {- nCr maths -}
 
@@ -26,7 +27,6 @@ data State = State String {- state name -} Int {- votes -} Float {- probability 
 
 flip_state flipBlue s@(State n v p) = if flipBlue then State n v (1.0 - p) else s
 
-votes_to_win = 270 :: Int
 
 -- Data as of 2024-10-26
 -- Sources:
@@ -43,6 +43,10 @@ undecided_states =
   , State "wi" 10 0.58
   , State "ga" 16 0.72
   ]
+
+undecided_votes = sum $ fmap (\(State _ v _) -> v) undecided_states
+total_votes = let n = 538 in assert (blue_votes + red_votes + undecided_votes == n) n
+votes_to_win = 270 :: Int
 
 total_combos = let n = length undecided_states
                in foldr (\r t -> nCr n r + t) 0 [0 .. n]
@@ -79,6 +83,8 @@ main = do
   let totalCombos = total_combos
       redCombos = highest_chances True
       blueCombos = highest_chances False
+  putStrLn $ "Total electoral votes: " ++ show total_votes
+  putStrLn $ "Electoral votes to win: " ++ show votes_to_win
   putStrLn $ "Total combos: " ++ show totalCombos
   putStrLn $ "Tie combos: " ++ show (totalCombos - length redCombos - length blueCombos)
   putStrLn "***** Red Winnings *****"
