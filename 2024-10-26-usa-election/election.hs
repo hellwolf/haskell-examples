@@ -64,9 +64,9 @@ print_total_chances states votes = do
   mapM_ (\n -> go ("Total chance if " ++ n ++ " is won") (set_state_to_win n states)) names
   where
     names = fmap (\(State n _ _) -> n) states
-    go title states' = putStrLn $ printf (title ++ ": %02f%%") (total_chance states' votes * 100)
+    go title states' = putStrLn $ printf (title ++ ": %0.2f%%") (total_chance states' votes * 100)
 
--- Data as of 2024-10-28
+-- Data as of 2024-10-29
 -- Sources:
 -- - https://polymarket.com/elections
 -- - https://www.270towin.com/road-to-270-combinations/
@@ -74,8 +74,8 @@ red_votes  = 219 :: Int
 blue_votes = 226 :: Int
 undecided_states_in_red =
   [ State "nc" 16 0.71
-  , State "nv"  6 0.65
-  , State "az" 11 0.73
+  , State "nv"  6 0.67
+  , State "az" 11 0.75
   , State "pa" 19 0.63
   , State "mi" 15 0.54
   , State "wi" 10 0.60
