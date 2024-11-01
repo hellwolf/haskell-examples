@@ -66,20 +66,20 @@ print_total_chances states votes = do
     names = fmap (\(State n _ _) -> n) states
     go title states' = putStrLn $ printf (title ++ ": %0.2f%%") (total_chance states' votes * 100)
 
--- Data as of 2024-10-31
+-- Data as of 2024-11-01
 -- Sources:
 -- - https://polymarket.com/elections
 -- - https://www.270towin.com/road-to-270-combinations/
 red_votes  = 219 :: Int
 blue_votes = 226 :: Int
 undecided_states_in_red =
-  [ State "nc" 16 0.71
-  , State "nv"  6 0.67
+  [ State "nc" 16 0.73
+  , State "nv"  6 0.64
   , State "az" 11 0.76
-  , State "pa" 19 0.61
-  , State "mi" 15 0.46
-  , State "wi" 10 0.54
-  , State "ga" 16 0.73
+  , State "pa" 19 0.58
+  , State "mi" 15 0.45
+  , State "wi" 10 0.49
+  , State "ga" 16 0.74
   ]
 
 undecided_states_in_blue = fmap (flip_state True) undecided_states_in_red
