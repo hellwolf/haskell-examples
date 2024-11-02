@@ -23,7 +23,7 @@ nCr n r = n' `div` r'
 
 {- election utilities -}
 
-data State = State String {- state name -} Int {- votes -} Float {- probability -}
+data State = State String {- state name -} Int {- votes -} Float {- probability -} deriving (Eq, Show)
 
 total_votes = 538 :: Int
 
@@ -33,7 +33,8 @@ total_combos states = let n = length states in foldr (\r t -> nCr n r + t) 1 [0 
 
 flip_state flipBlue s@(State n v p) = if flipBlue then State n v (1.0 - p) else s
 
-set_state_to_win name states = fmap (\s@(State n v _) -> if n == name then State n v 1.0 else s) states
+set_state_to_win name states = assert (not . null $ filter (\(State n _ _) -> n == name) states) states'
+    where states' = fmap (\s@(State n v _) -> if n == name then State n v 1.0 else s) states
 
 winning_combos states votes =
     filter (\(v, _, _) -> v >= votes_to_win) $
@@ -47,7 +48,7 @@ winning_combos states votes =
       (votes, 1.0, [])
       (zip [0 .. nstates] c)
 
-highest_chances states votes =
+highest_chances votes states =
     sortBy (\(_, p1, _) (_, p2, _) -> compare p2 p1) $
     winning_combos states votes
 
@@ -59,27 +60,27 @@ total_chance states votes = go states votes 1
       + if v + v' < votes_to_win then go as (v + v') (p' * p) else p' * p
     go [] v p = if v >= votes_to_win then p else 0
 
-print_total_chances states votes = do
+print_total_chances votes states = do
   go "Total chance" states
   mapM_ (\n -> go ("Total chance if " ++ n ++ " is won") (set_state_to_win n states)) names
   where
     names = fmap (\(State n _ _) -> n) states
     go title states' = putStrLn $ printf (title ++ ": %0.2f%%") (total_chance states' votes * 100)
 
--- Data as of 2024-11-01
+-- Data as of 2024-11-02
 -- Sources:
 -- - https://polymarket.com/elections
 -- - https://www.270towin.com/road-to-270-combinations/
 red_votes  = 219 :: Int
 blue_votes = 226 :: Int
 undecided_states_in_red =
-  [ State "nc" 16 0.73
-  , State "nv"  6 0.64
-  , State "az" 11 0.76
-  , State "pa" 19 0.58
-  , State "mi" 15 0.45
-  , State "wi" 10 0.49
-  , State "ga" 16 0.74
+  [ State "nc" 16 0.70
+  , State "nv"  6 0.65
+  , State "az" 11 0.75
+  , State "pa" 19 0.57
+  , State "mi" 15 0.43
+  , State "wi" 10 0.50
+  , State "ga" 16 0.71
   ]
 
 undecided_states_in_blue = fmap (flip_state True) undecided_states_in_red
@@ -89,8 +90,8 @@ undecided_votes = let n = sum $ fmap (\(State _ v _) -> v) undecided_states_in_r
 
 main = do
   let totalCombos = total_combos undecided_states_in_red
-      redCombos = highest_chances undecided_states_in_red red_votes
-      blueCombos = highest_chances undecided_states_in_blue blue_votes
+      redCombos = highest_chances red_votes undecided_states_in_red
+      blueCombos = highest_chances blue_votes undecided_states_in_blue
   putStrLn $ "Total electoral votes: " ++ show total_votes
   putStrLn $ "Electoral votes to win: " ++ show votes_to_win
   putStrLn $ "Undecided votes: " ++ show undecided_votes
@@ -99,11 +100,11 @@ main = do
   putStrLn "***** Red Winnings *****"
   mapM_ print_combo redCombos
   putStrLn $ "Number of combos: " ++ show (length redCombos)
-  print_total_chances undecided_states_in_red red_votes
+  print_total_chances red_votes undecided_states_in_red
   putStrLn "***** Blue Winnings *****"
   mapM_ print_combo blueCombos
   putStrLn $ "Number of combos: " ++ show (length blueCombos)
-  print_total_chances undecided_states_in_blue blue_votes
+  print_total_chances blue_votes undecided_states_in_blue
 
 {-
 Local Variables:
