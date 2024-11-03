@@ -27,9 +27,9 @@ foo :: String -> Int -> Bool -> String
 foo l i b = if b then l ++ ": " ++ show i else l ++ ": nah"
 
 main = do
-  let foo' = MkFn foo
-  putStrLn (curry' foo' "Hello: " (42 :: Int) True)
-  putStrLn (curry' foo' "Hello: " (69 :: Int) False)
+  let foo' = curry' (MkFn foo)
+  putStrLn (foo' "Hello: " (42 :: Int) True)
+  putStrLn (foo' "Hello: " (69 :: Int) False)
 
 {-
 Local Variables:
