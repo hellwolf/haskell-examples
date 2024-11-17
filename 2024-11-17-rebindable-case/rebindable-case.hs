@@ -16,10 +16,9 @@ import           Data.Maybe            (fromJust)
 
 -- | Define a 'Caseable' instance for your functor @m@ and its type @a@.
 class Caseable a (m :: Type -> Type) where
-  type family LiftedCase m r = result | result -> m r
+  type family LiftedCase   m r = result | result -> m r
   type family UnliftedCase m r = result | result -> m r
   mkCaseable :: forall. UnliftedCase m a -> m a
-  unCaseable :: forall. m a -> UnliftedCase m a
   matchCases :: forall b. m a -> (LiftedCase m a -> UnliftedCase m b) -> UnliftedCase m b
 
 -- | The case matching combinator for all caseables.
@@ -35,7 +34,6 @@ instance Caseable a Identity where
   type instance LiftedCase Identity r = Identity r
   type instance UnliftedCase Identity r = Identity r
   mkCaseable = id
-  unCaseable = id
   matchCases a f = f a
 
 testMaybe :: Maybe Int -> Bool
@@ -75,8 +73,7 @@ instance (Num a, Integral a, Bounded a) => Calculatable Expr (Maybe a) where
   calc (Abs a)   = bounded_op1 abs (calc a)
   calc (Sig a)   = bounded_op1 signum (calc a)
   calc (Neg a)   = bounded_op1 negate (calc a)
-  calc (Pat a f) = -- let a' = liftCase (MkExprPat (Val (calc a))) -- :: Maybe (Expr a')
-    case calc a of
+  calc (Pat a f) = case calc a of
       Just a' -> calc (f (Just (Val a')))
       Nothing -> calc (f Nothing)
 
@@ -84,7 +81,6 @@ instance (Num a, Integral a, Bounded a) => Caseable a (ExprPat Maybe) where
   type instance LiftedCase (ExprPat Maybe) r = Maybe (Expr r)
   type instance UnliftedCase (ExprPat Maybe) r = Expr (Maybe r)
   mkCaseable = MkExprPat
-  unCaseable = unExprPat
   matchCases (MkExprPat e) f = Pat e f
 
 -- tests
@@ -117,19 +113,18 @@ test_long_expr :: Integer -> Integer -> Integer -> Int8
 test_long_expr a b c = let a' = fromInteger a
                            b' = fromInteger b
                            c' = fromInteger c
-                       in fromJust $ calc $ safe_add2 (add2 a' b') c'
+                       in fromJust $ calc $ safe_add2 (a' * b') c'
 
 -- >>> test_safe_add2 2 3
 -- >>> test_safe_add2 100 100
 -- >>> test_safe_add2 1000 0
--- >>> test_long_expr 1 2 100
--- >>> test_long_expr 100 10 20
+-- >>> test_long_expr 2 5 100
+-- >>> test_long_expr 10 10 30
 -- 5
 -- -1
 -- -1
--- 103
+-- 110
 -- -1
-
 
 ----------------------------------------------------------------------------------------------------
 
