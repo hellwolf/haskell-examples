@@ -18,8 +18,8 @@ import           Data.Maybe            (fromJust)
 class Caseable a (m :: Type -> Type) where
   type family LiftedCase m r = result | result -> m r
   type family UnliftedCase m r = result | result -> m r
-  mkCaseable :: UnliftedCase m a -> m a
-  unCaseable :: m a -> UnliftedCase m a
+  mkCaseable :: forall. UnliftedCase m a -> m a
+  unCaseable :: forall. m a -> UnliftedCase m a
   matchCases :: forall b. m a -> (LiftedCase m a -> UnliftedCase m b) -> UnliftedCase m b
 
 -- | The case matching combinator for all caseables.
@@ -39,7 +39,7 @@ instance Caseable a Identity where
   matchCases a f = f a
 
 testMaybe :: Maybe Int -> Bool
-testMaybe a = runIdentity $ match (Identity a) \case -- it can be rebound to @case a of@
+testMaybe a = runIdentity $ match (Identity a) \case -- it can be rebound to @case (Identity a) of@
   (Identity (Just _)) -> pure True
   (Identity Nothing)  -> pure False
 
@@ -122,8 +122,12 @@ test_long_expr a b c = let a' = fromInteger a
 -- >>> test_safe_add2 2 3
 -- >>> test_safe_add2 100 100
 -- >>> test_safe_add2 1000 0
+-- >>> test_long_expr 1 2 100
+-- >>> test_long_expr 100 10 20
 -- 5
 -- -1
+-- -1
+-- 103
 -- -1
 
 
