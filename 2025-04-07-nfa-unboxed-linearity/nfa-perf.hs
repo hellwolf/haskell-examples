@@ -2,20 +2,22 @@
 {-
 
 This was prompted and inspired by https://0xd34df00d.me/posts/2024/09/naive-nfas.html#linear-vectors
-to write a faster linear-type based NFA using mutable vector with unboxed data.
+to write a faster linear-type based NFA match function using a mutable vector of unboxed data.
 
-How it was done:
+It is made especially to compare fairly with the ST monad version of the NFA match function
+mentioned in the article.
 
-- Similar to ST monad match, implement new_linear_iovec, read_linear_iovec, write_linear_iovec using
-  unsafePerformIO
-- Modified `match_linear2` that uses these new linear iovec primitives.
 
-Performance:
+How to use:
 
-- Generate dataset: `make aa.dat aaz.dat ab.dat abz.dat`
-- To run the benchmark:
-  - ./nfa-perf.hs linear2 aa.dat +RTS -s
-  - ./nfa-perf.hs st aa.dat +RTS -s
+```
+$ make bench
+$ ./nfa-perf.hs linear2 $$i.dat +RTS -s
+$ ./nfa-perf.hs st $$i.dat +RTS -s
+```
+
+Full post:
+https://discourse.haskell.org/t/linearly-typed-mutable-vector-of-unboxed-values-hack-for-nfa-benchmark/11787
 
 -}
 {- cabal:
